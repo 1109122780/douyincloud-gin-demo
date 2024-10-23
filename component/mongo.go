@@ -70,41 +70,41 @@ func (m *mongoComponent) SetName(ctx context.Context, key string, name string) e
 	return nil
 }
 
-//NewMongoComponent 新建一个mongodbComponent，其实现了HelloWorldComponent接口
-//func NewMongoComponent() *mongoComponent {
-//
-//	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-//	defer cancel()
-//	tmp, err := url.Parse(mongoAddr)
-//	if err != nil {
-//		panic("mongo addr parse error")
-//	}
-//	authSource := tmp.Query().Get("authSource")
-//	credential := options.Credential{
-//		AuthSource: authSource,
-//		Username:   mongoUserName,
-//		Password:   mongoPassWord,
-//	}
-//	mongoUrl := fmt.Sprintf("mongodb://%s", mongoAddr)
-//
-//	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUrl).SetAuth(credential))
-//	if err != nil {
-//		fmt.Printf("mongoClient init error. err %s\n", err)
-//		panic("mongo connect error")
-//	}
-//
-//	dataBase := "demo"
-//	doc := &model{
-//		Key:   "name",
-//		Value: Mongo,
-//	}
-//	_, err = client.Database(dataBase).Collection(collectionName).InsertOne(context.TODO(), doc)
-//	if err != nil {
-//		fmt.Printf("mongoClient init error. err %s\n", err)
-//		panic("mongo init error")
-//	}
-//	return &mongoComponent{client, dataBase}
-//}
+// NewMongoComponent 新建一个mongodbComponent，其实现了HelloWorldComponent接口
+func NewMongoComponent() *mongoComponent {
+
+	//ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	//defer cancel()
+	//tmp, err := url.Parse(mongoAddr)
+	//if err != nil {
+	//	panic("mongo addr parse error")
+	//}
+	//authSource := tmp.Query().Get("authSource")
+	//credential := options.Credential{
+	//	AuthSource: authSource,
+	//	Username:   mongoUserName,
+	//	Password:   mongoPassWord,
+	//}
+	//mongoUrl := fmt.Sprintf("mongodb://%s", mongoAddr)
+	//
+	//client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUrl).SetAuth(credential))
+	//if err != nil {
+	//	fmt.Printf("mongoClient init error. err %s\n", err)
+	//	panic("mongo connect error")
+	//}
+	//
+	//dataBase := "demo"
+	//doc := &model{
+	//	Key:   "name",
+	//	Value: Mongo,
+	//}
+	//_, err = client.Database(dataBase).Collection(collectionName).InsertOne(context.TODO(), doc)
+	//if err != nil {
+	//	fmt.Printf("mongoClient init error. err %s\n", err)
+	//	panic("mongo init error")
+	//}
+	return &mongoComponent{nil, "nil"}
+}
 
 // init 项目启动时，会从环境变量中获取mongodb的地址，用户名和密码
 func init() {
