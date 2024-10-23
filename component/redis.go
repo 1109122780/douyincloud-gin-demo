@@ -17,7 +17,6 @@ package component
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-redis/redis/v8"
 	"os"
 )
@@ -36,33 +35,33 @@ type redisComponent struct {
 }
 
 func (r *redisComponent) GetName(ctx context.Context, key string) (name string, err error) {
-	return r.client.Get(ctx, key).Result()
+	return "redis", nil
 }
 
 func (r *redisComponent) SetName(ctx context.Context, key string, name string) error {
-	_, err := r.client.Set(ctx, key, name, 0).Result()
-	return err
+	//_, err := r.client.Set(ctx, key, name, 0).Result()
+	return nil
 }
 
-//NewRedisComponent 初始化一个实现了HelloWorldComponent接口的RedisComponent
+// NewRedisComponent 初始化一个实现了HelloWorldComponent接口的RedisComponent
 func NewRedisComponent() *redisComponent {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     redisAddr,
-		Username: redisUserName,
-		Password: redisPassword,
-		DB:       0, // use default DB
-	})
-	_, err := rdb.Ping(context.TODO()).Result()
-	if err != nil {
-		fmt.Printf("redisClient init error. err %s", err)
-		panic(fmt.Sprintf("redis init failed. err %s\n", err))
-	}
+	//rdb := redis.NewClient(&redis.Options{
+	//	Addr:     redisAddr,
+	//	Username: redisUserName,
+	//	Password: redisPassword,
+	//	DB:       0, // use default DB
+	//})
+	//_, err := rdb.Ping(context.TODO()).Result()
+	//if err != nil {
+	//	fmt.Printf("redisClient init error. err %s", err)
+	//	panic(fmt.Sprintf("redis init failed. err %s\n", err))
+	//}
 	return &redisComponent{
-		client: rdb,
+		client: nil,
 	}
 }
 
-//init 项目启动时会从环境变量中获取
+// init 项目启动时会从环境变量中获取
 func init() {
 	redisAddr = os.Getenv("REDIS_ADDRESS")
 	redisUserName = os.Getenv("REDIS_USERNAME")
