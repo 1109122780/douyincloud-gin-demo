@@ -10,10 +10,12 @@ RUN GOPROXY=https://goproxy.cn,direct GOOS=linux GOARCH=amd64 go build -o main .
 
 
 FROM public-cn-beijing.cr.volces.com/public/base:alpine-3.13
+
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk update && \
     apk upgrade && \
-    apk add bash curl net-tools
+    apk add bash curl net-tools \
+
 WORKDIR /opt/application
 
 COPY --from=builder /app/main /app/run.sh /opt/application/

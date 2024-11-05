@@ -33,7 +33,7 @@ var (
 	redisHelloWorld *redisComponent
 )
 
-//GetComponent 通过传入的component的名称返回实现了HelloWorldComponent接口的component
+// GetComponent 通过传入的component的名称返回实现了HelloWorldComponent接口的component
 func GetComponent(component string) (HelloWorldComponent, error) {
 	switch component {
 	case Mongo:

@@ -16,10 +16,70 @@ limitations under the License.
 package service
 
 import (
+	"context"
 	"douyincloud-gin-demo/component"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/volcengine/ve-tos-golang-sdk/v2/tos"
+	"net/http"
+	"strings"
 )
+
+func UploadHandler(c *gin.Context) {
+	// 直接在代码中定义变量
+	accessKey := "AKLTMmY0MzAxNGM3NDczNGIyY2I0NTBkMjYzMGU4NWY1ODg"
+	secretKey := "T1dZek1UTmpNVGd4WldWaU5EUTVOV0U0TWpGa1ltSXdZV0k0TmpRM1ptWQ=="
+	endpoint := "https://tos-cn-beijing.volces.com"
+	region := "cn-beijing"
+	bucketName := "tt42cc3471ddf817dd12-env-g3hekwkvus" // 填写实际的 bucket 名称
+	objectKey := "test/example_object.txt"
+	content := "1234567890abcdefghijklmnopqrstuvwxyz~!@#$%^&*()_+<>?,./   :'1234567890abcdefghijklmnopqrstuvwxyz~!@#$%^&*()_+<>?,./   :'"
+
+	// 初始化 TOS 客户端
+	client, err := tos.NewClientV2(endpoint, tos.WithRegion(region), tos.WithCredentials(tos.NewStaticCredentials(accessKey, secretKey)))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to initialize TOS client", "details": err.Error()})
+		return
+	}
+
+	ctx := context.Background()
+	body := strings.NewReader(content)
+
+	// 上传内容
+	output, err := client.PutObjectV2(ctx, &tos.PutObjectV2Input{
+		PutObjectBasicInput: tos.PutObjectBasicInput{
+			Bucket: bucketName,
+			Key:    objectKey,
+		},
+		Content: body,
+	})
+
+	// 处理错误
+	if err != nil {
+		if serverErr, ok := err.(*tos.TosServerError); ok {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":               "Server error",
+				"request_id":          serverErr.RequestID,
+				"status_code":         serverErr.StatusCode,
+				"response_error_code": serverErr.Code,
+				"response_error_msg":  serverErr.Message,
+			})
+		} else if clientErr, ok := err.(*tos.TosClientError); ok {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":   "Client error",
+				"details": clientErr.Cause.Error(),
+			})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unknown error", "details": err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"requestID": output.RequestID,
+		"message":   "File uploaded successfully",
+	})
+}
 
 func Hello(ctx *gin.Context) {
 	target := ctx.Query("target")

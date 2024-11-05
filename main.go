@@ -27,6 +27,6 @@ func main() {
 
 	r.GET("/api/hello", service.Hello)
 	r.POST("/api/set_name", service.SetName)
-
+	r.GET("/api/object", service.UploadHandler)
 	r.Run(":8000")
 }
